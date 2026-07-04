@@ -1,2 +1,6 @@
-Write-Host "CEREBRO funcionando"
-Start-Sleep 10
+Add-Type -AssemblyName PresentationFramework
+
+[System.Windows.MessageBox]::Show(
+"CEREBRO DEPLOY FUNCIONA",
+"CEREBRO"
+)
