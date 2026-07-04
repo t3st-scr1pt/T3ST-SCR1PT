@@ -31,8 +31,9 @@ $Apps = @(
     "Google.Chrome",
     "Google.GoogleDrive",
     "Tailscale.Tailscale",
-    "VideoLAN.VLC",
-    "7zip.7zip"
+    "7zip.7zip",
+    "Microsoft.PowerToys",
+    "HomeAssistant.HomeAssistant"
 )
 
 foreach ($App in $Apps)
@@ -55,6 +56,29 @@ foreach ($App in $Apps)
     {
         Write-Host "ERROR -> $App"
     }
+}
+
+# ==========================================
+# ESTRUCTURA CEREBRO
+# ==========================================
+
+Write-Host ""
+Write-Host "Creando estructura CEREBRO..."
+
+$Folders = @(
+    "C:\CEREBRO",
+    "C:\CEREBRO\Scripts",
+    "C:\CEREBRO\Tools",
+    "C:\CEREBRO\Wallpapers",
+    "C:\CEREBRO\Configs"
+)
+
+foreach ($Folder in $Folders)
+{
+    New-Item `
+        -ItemType Directory `
+        -Path $Folder `
+        -Force | Out-Null
 }
 
 # ==========================================
