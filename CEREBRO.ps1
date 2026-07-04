@@ -243,17 +243,6 @@ Set-ItemProperty `
     -Value 0 `
     -ErrorAction SilentlyContinue
 
-New-Item `
-    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" `
-    -Force | Out-Null
-
-Set-ItemProperty `
-    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" `
-    -Name "ShellFeedsTaskbarViewMode" `
-    -Value 2 `
-    -Type DWord `
-    -ErrorAction SilentlyContinue
-
 # ==========================================
 # CURSOR CEREBRO
 # ==========================================
