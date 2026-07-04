@@ -1,5 +1,5 @@
 # ==========================================
-# CEREBRO DEPLOY v1.2
+# CEREBRO DEPLOY v1.3
 # ==========================================
 
 $ErrorActionPreference = "Continue"
@@ -16,12 +16,12 @@ Write-Host ""
 
 if (!(Get-Command winget -ErrorAction SilentlyContinue))
 {
-    Write-Host "ERROR: Winget no esta disponible."
+    Write-Host "ERROR: Winget no está disponible."
     exit
 }
 
 # ==========================================
-# INSTALACION DE APLICACIONES
+# INSTALACIÓN DE APLICACIONES
 # ==========================================
 
 Write-Host ""
@@ -64,19 +64,25 @@ foreach ($App in $Apps)
 Write-Host ""
 Write-Host "Aplicando modo oscuro..."
 
-New-ItemProperty `
+New-Item `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes" `
+    -Force | Out-Null
+
+New-Item `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" `
+    -Force | Out-Null
+
+Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" `
     -Name "AppsUseLightTheme" `
     -Value 0 `
-    -PropertyType DWord `
-    -Force | Out-Null
+    -Type DWord
 
-New-ItemProperty `
+Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" `
     -Name "SystemUsesLightTheme" `
     -Value 0 `
-    -PropertyType DWord `
-    -Force | Out-Null
+    -Type DWord
 
 # ==========================================
 # EXPLORADOR
@@ -85,14 +91,10 @@ New-ItemProperty `
 Write-Host ""
 Write-Host "Configurando explorador..."
 
-# Mostrar extensiones
-
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
     -Name "HideFileExt" `
     -Value 0
-
-# Mostrar archivos ocultos
 
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
@@ -106,7 +108,7 @@ Set-ItemProperty `
 Write-Host ""
 Write-Host "Configurando barra de tareas..."
 
-# Mantener centrada
+# Centrada
 
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
@@ -123,6 +125,13 @@ New-Item `
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" `
     -Name "SearchboxTaskbarMode" `
+    -Value 0 `
+    -Type DWord `
+    -ErrorAction SilentlyContinue
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" `
+    -Name "SearchboxTaskbarModeCache" `
     -Value 0 `
     -Type DWord `
     -ErrorAction SilentlyContinue
@@ -144,11 +153,11 @@ Set-ItemProperty `
     -ErrorAction SilentlyContinue
 
 # ==========================================
-# COLOR DE ENFASIS VERDE CEREBRO
+# COLOR DE ÉNFASIS VERDE
 # ==========================================
 
 Write-Host ""
-Write-Host "Aplicando color de enfasis..."
+Write-Host "Aplicando color de énfasis..."
 
 New-Item `
     -Path "HKCU:\Software\Microsoft\Windows\DWM" `
@@ -156,23 +165,70 @@ New-Item `
 
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\DWM" `
-    -Name "ColorPrevalence" `
-    -Value 1 `
-    -Type DWord
-
-Set-ItemProperty `
-    -Path "HKCU:\Software\Microsoft\Windows\DWM" `
     -Name "AccentColor" `
-    -Value 4279270416 `
+    -Value 0xFF107C10 `
     -Type DWord `
     -ErrorAction SilentlyContinue
 
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Windows\DWM" `
     -Name "ColorizationColor" `
-    -Value 4279270416 `
+    -Value 0xC4107C10 `
     -Type DWord `
     -ErrorAction SilentlyContinue
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\DWM" `
+    -Name "EnableWindowColorization" `
+    -Value 1 `
+    -Type DWord `
+    -ErrorAction SilentlyContinue
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\DWM" `
+    -Name "ColorPrevalence" `
+    -Value 1 `
+    -Type DWord `
+    -ErrorAction SilentlyContinue
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" `
+    -Name "ColorPrevalence" `
+    -Value 1 `
+    -Type DWord `
+    -ErrorAction SilentlyContinue
+
+New-Item `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent" `
+    -Force | Out-Null
+
+$AccentPalette = [byte[]](
+0x95,0xEF,0x81,0x00,
+0x45,0xE5,0x32,0x00,
+0x19,0xA1,0x15,0x00,
+0x10,0x7C,0x10,0x00,
+0x0E,0x6D,0x0E,0x00,
+0x08,0x4B,0x08,0x00,
+0x03,0x2B,0x03,0x00,
+0x4C,0x4A,0x48,0x00
+)
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent" `
+    -Name "AccentPalette" `
+    -Value $AccentPalette
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent" `
+    -Name "AccentColorMenu" `
+    -Value 0xFF107C10 `
+    -Type DWord
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent" `
+    -Name "StartColorMenu" `
+    -Value 0xFF0E6D0E `
+    -Type DWord
 
 # ==========================================
 # CURSOR WINDOWS 11 VERDE
@@ -185,23 +241,11 @@ New-Item `
     -Path "HKCU:\Software\Microsoft\Accessibility" `
     -Force | Out-Null
 
-# Tipo cursor personalizado
-
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Accessibility" `
     -Name "CursorType" `
     -Value 6 `
     -Type DWord
-
-# Tamaño 2
-
-Set-ItemProperty `
-    -Path "HKCU:\Software\Microsoft\Accessibility" `
-    -Name "CursorSize" `
-    -Value 2 `
-    -Type DWord
-
-# Verde (#00FF00)
 
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Accessibility" `
@@ -209,24 +253,38 @@ Set-ItemProperty `
     -Value 65280 `
     -Type DWord
 
-# Velocidad ratón = 13
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Accessibility" `
+    -Name "CursorSize" `
+    -Value 2 `
+    -Type DWord
+
+New-Item `
+    -Path "HKCU:\Control Panel\Cursors" `
+    -Force | Out-Null
+
+Set-ItemProperty `
+    -Path "HKCU:\Control Panel\Cursors" `
+    -Name "CursorBaseSize" `
+    -Value 48 `
+    -Type DWord
 
 Set-ItemProperty `
     -Path "HKCU:\Control Panel\Mouse" `
     -Name "MouseSensitivity" `
     -Value "13"
 
+rundll32.exe user32.dll,UpdatePerUserSystemParameters
+
 # ==========================================
-# ENERGIA
+# ENERGÍA
 # ==========================================
 
 Write-Host ""
-Write-Host "Configurando energia..."
+Write-Host "Configurando energía..."
 
 powercfg /hibernate off
-
 powercfg /change standby-timeout-ac 0
-
 powercfg /change monitor-timeout-ac 0
 
 # ==========================================
@@ -239,16 +297,12 @@ Write-Host "Aplicando wallpaper..."
 try
 {
     $WallpaperFolder = "$env:PUBLIC\Pictures"
+    $WallpaperFile = "$WallpaperFolder\t3st-scr1pt.png"
 
     if (!(Test-Path $WallpaperFolder))
     {
-        New-Item `
-            -ItemType Directory `
-            -Path $WallpaperFolder `
-            -Force | Out-Null
+        New-Item -ItemType Directory -Path $WallpaperFolder -Force | Out-Null
     }
-
-    $WallpaperFile = "$WallpaperFolder\t3st-scr1pt.png"
 
     Invoke-WebRequest `
         -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/wallpapers/t3st-scr1pt.png" `
@@ -257,12 +311,12 @@ try
     Add-Type @"
 using System.Runtime.InteropServices;
 public class Wallpaper {
-    [DllImport("user32.dll", SetLastError=true)]
-    public static extern bool SystemParametersInfo(
-        int uAction,
-        int uParam,
-        string lpvParam,
-        int fuWinIni);
+[DllImport("user32.dll", SetLastError=true)]
+public static extern bool SystemParametersInfo(
+int uAction,
+int uParam,
+string lpvParam,
+int fuWinIni);
 }
 "@
 
@@ -273,11 +327,11 @@ public class Wallpaper {
         3
     )
 
-    Write-Host "Wallpaper aplicado correctamente."
+    Write-Host "Wallpaper aplicado."
 }
 catch
 {
-    Write-Host "ERROR aplicando wallpaper."
+    Write-Host "Error aplicando wallpaper."
 }
 
 # ==========================================
