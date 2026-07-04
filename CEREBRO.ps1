@@ -440,10 +440,3 @@ Stop-Process `
 Start-Sleep 3
 
 Start-Process explorer.exe
-Start-Sleep 2
-
-Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
-
-Start-Sleep 3
-
-Start-Process explorer.exe
