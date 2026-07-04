@@ -391,3 +391,14 @@ Stop-Process `
 Start-Sleep 3
 
 Start-Process explorer.exe
+
+Write-Host ""
+Write-Host "====================================="
+Write-Host " CEREBRO DEPLOY FINALIZADO "
+Write-Host " Reiniciando equipo en 15 segundos "
+Write-Host "====================================="
+Write-Host ""
+
+Start-Sleep 15
+
+Restart-Computer -Force
