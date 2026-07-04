@@ -231,15 +231,60 @@ Set-ItemProperty `
     -Type DWord
 
 # ==========================================
-# CURSOR WINDOWS 11 VERDE
+# WIDGETS
 # ==========================================
 
 Write-Host ""
-Write-Host "Configurando cursor..."
+Write-Host "Desactivando Widgets..."
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
+    -Name "TaskbarDa" `
+    -Value 0 `
+    -ErrorAction SilentlyContinue
 
 New-Item `
-    -Path "HKCU:\Software\Microsoft\Accessibility" `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" `
     -Force | Out-Null
+
+Set-ItemProperty `
+    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" `
+    -Name "ShellFeedsTaskbarViewMode" `
+    -Value 2 `
+    -Type DWord `
+    -ErrorAction SilentlyContinue
+
+# ==========================================
+# CURSOR CEREBRO
+# ==========================================
+
+Write-Host ""
+Write-Host "Aplicando cursor CEREBRO..."
+
+$ConfigFolder = "$env:TEMP\CEREBRO"
+
+New-Item `
+    -ItemType Directory `
+    -Path $ConfigFolder `
+    -Force | Out-Null
+
+Invoke-WebRequest `
+    -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/configs/Accessibility.reg" `
+    -OutFile "$ConfigFolder\Accessibility.reg"
+
+Invoke-WebRequest `
+    -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/configs/Cursors.reg" `
+    -OutFile "$ConfigFolder\Cursors.reg"
+
+Invoke-WebRequest `
+    -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/configs/Cursors2.reg" `
+    -OutFile "$ConfigFolder\Cursors2.reg"
+
+reg import "$ConfigFolder\Accessibility.reg"
+reg import "$ConfigFolder\Cursors.reg"
+reg import "$ConfigFolder\Cursors2.reg"
+
+# Forzar configuración correcta
 
 Set-ItemProperty `
     -Path "HKCU:\Software\Microsoft\Accessibility" `
@@ -259,16 +304,6 @@ Set-ItemProperty `
     -Value 2 `
     -Type DWord
 
-New-Item `
-    -Path "HKCU:\Control Panel\Cursors" `
-    -Force | Out-Null
-
-Set-ItemProperty `
-    -Path "HKCU:\Control Panel\Cursors" `
-    -Name "CursorBaseSize" `
-    -Value 48 `
-    -Type DWord
-
 Set-ItemProperty `
     -Path "HKCU:\Control Panel\Mouse" `
     -Name "MouseSensitivity" `
@@ -276,6 +311,7 @@ Set-ItemProperty `
 
 rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
+Start-Sleep 2
 # ==========================================
 # ENERGÍA
 # ==========================================
@@ -346,18 +382,6 @@ Stop-Process `
     -Force `
     -ErrorAction SilentlyContinue
 
-Start-Sleep 2
+Start-Sleep 3
 
 Start-Process explorer.exe
-
-# ==========================================
-# FINALIZADO
-# ==========================================
-
-Write-Host ""
-Write-Host "====================================="
-Write-Host " CEREBRO DEPLOY FINALIZADO "
-Write-Host "====================================="
-Write-Host ""
-
-Start-Sleep 5
