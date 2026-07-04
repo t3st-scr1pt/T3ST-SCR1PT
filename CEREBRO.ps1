@@ -33,7 +33,8 @@ $Apps = @(
     "Tailscale.Tailscale",
     "7zip.7zip",
     "Microsoft.PowerToys",
-    "HomeAssistant.HomeAssistant"
+    "HomeAssistant.HomeAssistant",
+    "Microsoft.VisualStudioCode"
 )
 
 foreach ($App in $Apps)
