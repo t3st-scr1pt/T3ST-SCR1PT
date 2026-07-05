@@ -34,6 +34,7 @@ $Apps = @(
     "7zip.7zip",
     "Microsoft.PowerToys",
     "HomeAssistant.HomeAssistant",
+    "Git.Git",
     "Microsoft.VisualStudioCode"
 )
 
@@ -427,4 +428,3 @@ Write-Host ""
 Start-Sleep 15
 
 Restart-Computer -Force
-# Prueba VS Code
