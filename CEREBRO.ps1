@@ -561,13 +561,22 @@ Write-Host ""
 # ==========================================
 
 $PrimerInicio = @'
+for($i=0;$i -lt 30;$i++)
+{
+    $DriveShortcut = Get-ChildItem `
+    "G:\Mi unidad" `
+    -Filter "*.lnk" `
+    -ErrorAction SilentlyContinue |
+    Where-Object {$_.BaseName -eq "T3ST-SCR1PT"} |
+    Select-Object -First 1
 
-$DriveShortcut = Get-ChildItem `
-"G:\Mi unidad" `
--Filter "*.lnk" `
--ErrorAction SilentlyContinue |
-Where-Object {$_.BaseName -eq "T3ST-SCR1PT"} |
-Select-Object -First 1
+    if($DriveShortcut)
+    {
+        break
+    }
+
+    Start-Sleep 10
+}
 
 if($DriveShortcut)
 {
@@ -585,13 +594,13 @@ if($DriveShortcut)
     {
         Start-Process powershell `
         -ArgumentList "-ExecutionPolicy Bypass -File `"$Script`""
-
-        Unregister-ScheduledTask `
-        -TaskName "CEREBRO-PrimerInicio" `
-        -Confirm:$false
     }
 }
 
+Remove-Item `
+"$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\CEREBRO-PRIMER-INICIO.lnk" `
+-Force `
+-ErrorAction SilentlyContinue
 '@
 
 $PrimerInicio |
@@ -599,19 +608,23 @@ Out-File `
 "C:\CEREBRO\Scripts\PrimerInicio.ps1" `
 -Force
 
-$Action = New-ScheduledTaskAction `
--Execute "powershell.exe" `
--Argument "-ExecutionPolicy Bypass -File `"C:\CEREBRO\Scripts\PrimerInicio.ps1`""
+$StartupFolder =
+"$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
 
-$Trigger = New-ScheduledTaskTrigger `
--AtLogOn
+$WshShell =
+New-Object -ComObject WScript.Shell
 
-Register-ScheduledTask `
--TaskName "CEREBRO-PrimerInicio" `
--Action $Action `
--Trigger $Trigger `
--RunLevel Highest `
--Force
+$Shortcut =
+$WshShell.CreateShortcut(
+"$StartupFolder\CEREBRO-PRIMER-INICIO.lnk"
+)
+
+$Shortcut.TargetPath = "powershell.exe"
+
+$Shortcut.Arguments =
+'-ExecutionPolicy Bypass -File "C:\CEREBRO\Scripts\PrimerInicio.ps1"'
+
+$Shortcut.Save()
 
 Stop-Transcript
 
