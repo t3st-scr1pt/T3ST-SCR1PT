@@ -349,9 +349,15 @@ Start-Sleep 2
 Write-Host ""
 Write-Host "Configurando energía..."
 
-powercfg /hibernate off
+# Evitar suspensión durante y después de la instalación
+
+powercfg -h off
+
 powercfg /change standby-timeout-ac 0
 powercfg /change monitor-timeout-ac 0
+
+powercfg /change standby-timeout-dc 0
+powercfg /change monitor-timeout-dc 0
 
 # ==========================================
 # WALLPAPER
