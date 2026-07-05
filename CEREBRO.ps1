@@ -103,11 +103,9 @@ Write-Host "Instalando aplicaciones..."
 $Apps = @(
     "Google.Chrome",
     "Google.GoogleDrive",
-    "RustDesk.RustDesk",
     "Tailscale.Tailscale",
     "7zip.7zip",
     "Microsoft.PowerToys",
-    "HomeAssistant.HomeAssistant",
     "Git.Git",
     "Microsoft.VisualStudioCode"
 )
@@ -137,6 +135,33 @@ foreach ($App in $Apps)
     {
         Write-Host "ERROR -> $App"
     }
+}
+
+# ==========================================
+# RUSTDESK
+# ==========================================
+
+Write-Host ""
+Write-Host "Instalando RustDesk..."
+
+try
+{
+    $RustDeskInstaller = "$env:TEMP\RustDesk.exe"
+
+    Invoke-WebRequest `
+        -Uri "https://github.com/rustdesk/rustdesk/releases/latest/download/rustdesk-x86_64.exe" `
+        -OutFile $RustDeskInstaller
+
+    Start-Process `
+        -FilePath $RustDeskInstaller `
+        -ArgumentList "--silent-install" `
+        -Wait
+
+    Write-Host "OK -> RustDesk"
+}
+catch
+{
+    Write-Host "ERROR -> RustDesk"
 }
 
 "Configurando Windows" |
@@ -524,37 +549,25 @@ Start-Sleep 3
 Start-Process explorer.exe
 
 # ==========================================
-# CERRAR APLICACIONES ABIERTAS
+# CERRAR APPS ABIERTAS
 # ==========================================
 
 Write-Host ""
-Write-Host "Cerrando aplicaciones abiertas..."
+Write-Host "Cerrando aplicaciones..."
 
-$Procesos = @(
-    "chrome",
+@(
     "Code",
+    "GitHubDesktop",
+    "PowerToys.Settings",
     "PowerToys",
-    "rustdesk",
-    "tailscale-ipn",
-    "Home Assistant"
-)
+    "Tailscale",
+    "GoogleDriveFS",
+    "Chrome"
+) | ForEach-Object {
 
-foreach($Proceso in $Procesos)
-{
-    Get-Process `
-    -Name $Proceso `
-    -ErrorAction SilentlyContinue |
-    Stop-Process `
-    -Force `
-    -ErrorAction SilentlyContinue
+    Get-Process $_ -ErrorAction SilentlyContinue |
+    Stop-Process -Force -ErrorAction SilentlyContinue
 }
-
-Write-Host ""
-Write-Host "====================================="
-Write-Host " CEREBRO DEPLOY FINALIZADO "
-Write-Host " Reiniciando equipo en 15 segundos "
-Write-Host "====================================="
-Write-Host ""
 
 # ==========================================
 # PRIMER INICIO CEREBRO
