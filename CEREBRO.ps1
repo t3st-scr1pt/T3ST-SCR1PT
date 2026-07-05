@@ -103,6 +103,7 @@ Write-Host "Instalando aplicaciones..."
 $Apps = @(
     "Google.Chrome",
     "Google.GoogleDrive",
+    "RustDesk.RustDesk",
     "Tailscale.Tailscale",
     "7zip.7zip",
     "Microsoft.PowerToys",
@@ -404,6 +405,35 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 Start-Sleep 2
 
 # ==========================================
+# FORZAR REFRESCO DEL CURSOR
+# ==========================================
+
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+
+public class CursorRefresh
+{
+    [DllImport("user32.dll", SetLastError=true)]
+    public static extern bool SystemParametersInfo(
+        uint uiAction,
+        uint uiParam,
+        IntPtr pvParam,
+        uint fWinIni
+    );
+}
+"@
+
+[CursorRefresh]::SystemParametersInfo(
+    0x57,
+    0,
+    [IntPtr]::Zero,
+    0x01 -bor 0x02
+)
+
+Start-Sleep 2
+
+# ==========================================
 # WALLPAPER
 # ==========================================
 
@@ -493,12 +523,95 @@ Start-Sleep 3
 
 Start-Process explorer.exe
 
+# ==========================================
+# CERRAR APLICACIONES ABIERTAS
+# ==========================================
+
+Write-Host ""
+Write-Host "Cerrando aplicaciones abiertas..."
+
+$Procesos = @(
+    "chrome",
+    "Code",
+    "PowerToys",
+    "rustdesk",
+    "tailscale-ipn",
+    "Home Assistant"
+)
+
+foreach($Proceso in $Procesos)
+{
+    Get-Process `
+    -Name $Proceso `
+    -ErrorAction SilentlyContinue |
+    Stop-Process `
+    -Force `
+    -ErrorAction SilentlyContinue
+}
+
 Write-Host ""
 Write-Host "====================================="
 Write-Host " CEREBRO DEPLOY FINALIZADO "
 Write-Host " Reiniciando equipo en 15 segundos "
 Write-Host "====================================="
 Write-Host ""
+
+# ==========================================
+# PRIMER INICIO CEREBRO
+# ==========================================
+
+$PrimerInicio = @'
+
+$DriveShortcut = Get-ChildItem `
+"G:\Mi unidad" `
+-Filter "*.lnk" `
+-ErrorAction SilentlyContinue |
+Where-Object {$_.BaseName -eq "T3ST-SCR1PT"} |
+Select-Object -First 1
+
+if($DriveShortcut)
+{
+    $WshShell = New-Object -ComObject WScript.Shell
+
+    $Link = $WshShell.CreateShortcut(
+        $DriveShortcut.FullName
+    )
+
+    $DriveRoot = $Link.TargetPath
+
+    $Script = "$DriveRoot\CEREBRO\Scripts\CEREBRO-DRIVE.ps1"
+
+    if(Test-Path $Script)
+    {
+        Start-Process powershell `
+        -ArgumentList "-ExecutionPolicy Bypass -File `"$Script`""
+
+        Unregister-ScheduledTask `
+        -TaskName "CEREBRO-PrimerInicio" `
+        -Confirm:$false
+    }
+}
+
+'@
+
+$PrimerInicio |
+Out-File `
+"C:\CEREBRO\Scripts\PrimerInicio.ps1" `
+-Force
+
+$Action = New-ScheduledTaskAction `
+-Execute "powershell.exe" `
+-Argument "-ExecutionPolicy Bypass -File `"C:\CEREBRO\Scripts\PrimerInicio.ps1`""
+
+$Trigger = New-ScheduledTaskTrigger `
+-AtLogOn
+
+Register-ScheduledTask `
+-TaskName "CEREBRO-PrimerInicio" `
+-Action $Action `
+-Trigger $Trigger `
+-RunLevel Highest `
+-Force
 
 Stop-Transcript
 
