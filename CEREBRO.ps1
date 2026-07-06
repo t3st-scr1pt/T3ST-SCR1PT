@@ -506,6 +506,37 @@ catch
 }
 
 # ==========================================
+# PANTALLA DE BLOQUEO
+# ==========================================
+
+Write-Host ""
+Write-Host "Configurando pantalla de bloqueo..." -ForegroundColor Green
+
+$LockFolder = "$env:ProgramData\T3ST-SCR1PT"
+$LockImage  = "$LockFolder\lockscreen.png"
+
+New-Item -ItemType Directory `
+    -Path $LockFolder `
+    -Force | Out-Null
+
+Invoke-WebRequest `
+    -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/wallpapers/lockscreen.png" `
+    -OutFile $LockImage
+
+New-Item `
+    -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" `
+    -Force | Out-Null
+
+Set-ItemProperty `
+    -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" `
+    -Name "LockScreenImage" `
+    -Value $LockImage
+
+gpupdate /force | Out-Null
+
+Write-Host "Pantalla de bloqueo aplicada." -ForegroundColor Green
+
+# ==========================================
 # RESUMEN FINAL
 # ==========================================
 
