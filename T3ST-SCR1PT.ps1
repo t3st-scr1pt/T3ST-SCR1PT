@@ -392,7 +392,7 @@ $CursorFiles = @(
 foreach ($File in $CursorFiles)
 {
     Invoke-WebRequest `
-        -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/configs/cursors/$File" `
+        -Uri "https://raw.githubusercontent.com/t3st-scr1pt/T3ST-SCR1PT/main/configs/cursors/$File" `
         -OutFile "$CursorFolder\$File"
 }
 
@@ -476,7 +476,7 @@ try
     }
 
     Invoke-WebRequest `
-        -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/wallpapers/t3st-scr1pt.png" `
+        -Uri "https://raw.githubusercontent.com/t3st-scr1pt/T3ST-SCR1PT/main/wallpapers/t3st-scr1pt.png" `
         -OutFile $WallpaperFile
 
     Add-Type @"
@@ -520,7 +520,7 @@ New-Item -ItemType Directory `
     -Force | Out-Null
 
 Invoke-WebRequest `
-    -Uri "https://raw.githubusercontent.com/t3st-scr1pt/CEREBRO-DEPLOY/main/wallpapers/lockscreen.png" `
+    -Uri "https://raw.githubusercontent.com/t3st-scr1pt/T3ST-SCR1PT/main/wallpapers/lockscreen.png" `
     -OutFile $LockImage
 
 New-Item `
