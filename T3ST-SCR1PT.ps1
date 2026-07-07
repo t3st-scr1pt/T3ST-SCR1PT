@@ -56,7 +56,20 @@ $Banner = @"
 "@
 
 Write-Host $Banner -ForegroundColor Green
-Write-Host "Iniciando despliegue..." -ForegroundColor DarkGreen
+$Fecha = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
+$Equipo = $env:COMPUTERNAME
+$Usuario = $env:USERNAME
+
+Write-Host "┌────────────────────────────────────────────┐" -ForegroundColor DarkGreen
+Write-Host "│              DEPLOY STATUS                 │" -ForegroundColor DarkGreen
+Write-Host "├────────────────────────────────────────────┤" -ForegroundColor DarkGreen
+Write-Host ("│ HOSTNAME : {0,-30}│" -f $Equipo) -ForegroundColor Green
+Write-Host ("│ USER     : {0,-30}│" -f $Usuario) -ForegroundColor Green
+Write-Host ("│ DATE     : {0,-30}│" -f $Fecha) -ForegroundColor Green
+Write-Host ("│ VERSION  : {0,-30}│" -f "v1.4") -ForegroundColor Green
+Write-Host ("│ STATUS   : {0,-30}│" -f "INITIALIZING") -ForegroundColor Yellow
+Write-Host "└────────────────────────────────────────────┘" -ForegroundColor DarkGreen
+Write-Host ""
 Write-Host ""
 
 # ==========================================
