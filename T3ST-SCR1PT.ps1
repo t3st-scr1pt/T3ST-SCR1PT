@@ -31,10 +31,32 @@ Start-Transcript `
 # COMIENZO DE DEPLOY
 # ==========================================
 
-Write-Host ""
-Write-Host "====================================="
-Write-Host "      T3ST-SCR1PT DEPLOY INICIADO"
-Write-Host "====================================="
+# ==========================================
+# COMIENZO DE DEPLOY
+# ==========================================
+
+$Banner = @"
+
+████████╗██████╗ ███████╗███████╗████████╗
+╚══██╔══╝╚════██╗██╔════╝██╔════╝╚══██╔══╝
+   ██║    █████╔╝███████╗███████╗   ██║
+   ██║   ██╔═══╝ ╚════██║╚════██║   ██║
+   ██║   ███████╗███████║███████║   ██║
+   ╚═╝   ╚══════╝╚══════╝╚══════╝   ╚═╝
+
+╔══════════════════════════════════════════╗
+║          T3ST-SCR1PT DEPLOY             ║
+║                                          ║
+║   ► Instalación automática de Windows    ║
+║   ► Configuración personalizada          ║
+║   ► Integración con Google Drive         ║
+║   ► Preparado para CEREBRO               ║
+╚══════════════════════════════════════════╝
+
+"@
+
+Write-Host $Banner -ForegroundColor Green
+Write-Host "Iniciando despliegue..." -ForegroundColor DarkGreen
 Write-Host ""
 
 # ==========================================
