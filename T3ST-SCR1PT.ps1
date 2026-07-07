@@ -1,5 +1,5 @@
 # ==========================================
-# CEREBRO DEPLOY v1.4
+# T3ST-SCR1PT DEPLOY v1.4
 # ==========================================
 
 $ErrorActionPreference = "Continue"
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Continue"
 # SISTEMA DE LOGS
 # ==========================================
 
-$LogFolder = "C:\CEREBRO\Logs"
+$LogFolder = "C:\T3ST-SCR1PT\Logs"
 
 New-Item `
 -ItemType Directory `
@@ -33,7 +33,7 @@ Start-Transcript `
 
 Write-Host ""
 Write-Host "====================================="
-Write-Host "      CEREBRO DEPLOY INICIADO"
+Write-Host "      T3ST-SCR1PT DEPLOY INICIADO"
 Write-Host "====================================="
 Write-Host ""
 
@@ -66,23 +66,23 @@ if (!(Get-Command winget -ErrorAction SilentlyContinue))
 }
 
 # ==========================================
-# ESTRUCTURA CEREBRO
+# ESTRUCTURA T3ST-SCR1PT
 # ==========================================
 
-"Creando estructura CEREBRO" |
+"Creando estructura T3ST-SCR1PT" |
 Out-File `
 $StatusFile `
 -Force
 
 Write-Host ""
-Write-Host "Creando estructura CEREBRO..."
+Write-Host "Creando estructura T3ST-SCR1PT..."
 
 $Folders = @(
-    "C:\CEREBRO",
-    "C:\CEREBRO\Scripts",
-    "C:\CEREBRO\Tools",
-    "C:\CEREBRO\Wallpapers",
-    "C:\CEREBRO\Configs"
+    "C:\T3ST-SCR1PT",
+    "C:\T3ST-SCR1PT\Scripts",
+    "C:\T3ST-SCR1PT\Tools",
+    "C:\T3ST-SCR1PT\Wallpapers",
+    "C:\T3ST-SCR1PT\Configs"
 )
 
 foreach ($Folder in $Folders)
@@ -356,11 +356,11 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTask
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds" /v IsFeedsAvailable /t REG_DWORD /d 0 /f | Out-Null
 
 # ==========================================
-# CURSOR CEREBRO
+# CURSOR T3ST-SCR1PT
 # ==========================================
 
 Write-Host ""
-Write-Host "Aplicando cursor CEREBRO..."
+Write-Host "Aplicando cursor T3ST-SCR1PT..."
 
 $CursorFolder = "$env:LOCALAPPDATA\Microsoft\Windows\Cursors"
 
@@ -547,7 +547,7 @@ $StatusFile `
 
 @"
 =================================
-CEREBRO DEPLOY
+T3ST-SCR1PT DEPLOY
 =================================
 
 Version: 1.4
@@ -559,7 +559,7 @@ Estado: COMPLETADO
 Equipo: $env:COMPUTERNAME
 
 "@ | Out-File `
-"C:\CEREBRO\Logs\Resumen.txt"
+"C:\T3ST-SCR1PT\Logs\Resumen.txt"
 
 # ==========================================
 # REINICIAR EXPLORER
@@ -601,7 +601,7 @@ Write-Host "Cerrando aplicaciones..."
 }
 
 # ==========================================
-# PRIMER INICIO CEREBRO
+# PRIMER INICIO T3ST-SCR1PT
 # ==========================================
 
 $PrimerInicio = @'
@@ -632,7 +632,7 @@ if($DriveShortcut)
 
     $DriveRoot = $Link.TargetPath
 
-    $Script = "$DriveRoot\CEREBRO\Scripts\CEREBRO-DRIVE.ps1"
+    $Script = "$DriveRoot\T3ST-SCR1PT\Scripts\T3ST-SCR1PT-DRIVE.ps1"
 
     if(Test-Path $Script)
     {
@@ -642,14 +642,14 @@ if($DriveShortcut)
 }
 
 Remove-Item `
-"$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\CEREBRO-PRIMER-INICIO.lnk" `
+"$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T3ST-SCR1PT-PRIMER-INICIO.lnk" `
 -Force `
 -ErrorAction SilentlyContinue
 '@
 
 $PrimerInicio |
 Out-File `
-"C:\CEREBRO\Scripts\PrimerInicio.ps1" `
+"C:\T3ST-SCR1PT\Scripts\PrimerInicio.ps1" `
 -Force
 
 $StartupFolder =
@@ -660,13 +660,13 @@ New-Object -ComObject WScript.Shell
 
 $Shortcut =
 $WshShell.CreateShortcut(
-"$StartupFolder\CEREBRO-PRIMER-INICIO.lnk"
+"$StartupFolder\T3ST-SCR1PT-PRIMER-INICIO.lnk"
 )
 
 $Shortcut.TargetPath = "powershell.exe"
 
 $Shortcut.Arguments =
-'-ExecutionPolicy Bypass -File "C:\CEREBRO\Scripts\PrimerInicio.ps1"'
+'-ExecutionPolicy Bypass -File "C:\T3ST-SCR1PT\Scripts\PrimerInicio.ps1"'
 
 $Shortcut.Save()
 
