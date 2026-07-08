@@ -370,11 +370,16 @@ Set-ItemProperty `
 
 Write-Host "Desactivando Widgets..."
 
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
-/v TaskbarDa /t REG_DWORD /d 0 /f
+New-Item `
+-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
+-Force | Out-Null
 
-Stop-Process -Name explorer -Force
-Start-Process explorer
+New-ItemProperty `
+-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" `
+-Name "TaskbarDa" `
+-PropertyType DWord `
+-Value 0 `
+-Force | Out-Null
 
 # ==========================================
 # CURSOR T3ST-SCR1PT
