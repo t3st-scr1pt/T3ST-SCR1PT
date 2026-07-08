@@ -175,30 +175,21 @@ foreach ($App in $Apps)
 Write-Host ""
 Write-Host "Instalando RustDesk..."
 
-try
+winget install `
+--id RustDesk.RustDesk `
+-e `
+--silent `
+--accept-package-agreements `
+--accept-source-agreements
+
+if($LASTEXITCODE -eq 0)
 {
-    $RustDeskInstaller = "$env:TEMP\RustDesk.exe"
-
-    Invoke-WebRequest `
-        -Uri "https://github.com/rustdesk/rustdesk/releases/latest/download/rustdesk-x86_64.exe" `
-        -OutFile $RustDeskInstaller
-
-    Start-Process `
-        -FilePath $RustDeskInstaller `
-        -ArgumentList "--silent-install" `
-        -Wait
-
     Write-Host "OK -> RustDesk"
 }
-catch
+else
 {
     Write-Host "ERROR -> RustDesk"
 }
-
-"Configurando Windows" |
-Out-File `
-$StatusFile `
--Force
 
 # ==========================================
 # MODO OSCURO
